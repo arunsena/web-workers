@@ -6,6 +6,7 @@ if(worker in window){
     worker.postMessage('Hello World!');
     //log the return value
     worker.addEventListener('message', function response(event){
+        document.getElementById('result').innerHTML = 'Data coming through Ajax call in worker: '+ event.data;
         console.log('Data coming from worker : ' + event.data);
     }, false);
 }
@@ -14,6 +15,15 @@ if(window!=self){
 }
 function workerFunction (){
     self.addEventListener('message', function(e){
-        self.postMessage(e.data);
+        if(self.XMLHttpRequest){
+            var xhttp = new XMLHttpRequest();
+            xhttp.open('GET', 'https://jsonplaceholder.typicode.com/todos/10', true);
+            xhttp.send();
+            xhttp.onreadystatechange = function response(response){
+                if(this.readyState ===4 && this.status ===200){
+                    self.postMessage(this.responseText);
+                }
+            };
+        }
     },false);
 }
