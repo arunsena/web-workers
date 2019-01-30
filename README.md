@@ -36,6 +36,41 @@ worker.postMessage('Hello World'); // Send data to our worker.
 
 In worker context, ```this``` and ```self``` refer to global scope
 
+Workers have these subset of features available
+
+* Navigator Object
+* Location Object
+* XMLHttpRequest
+* Timeout's and Interval's
+* App cache
+* importScripts()
+* Spawn other workers
+
+Worker don't have access to
+
+* DOM
+* Window object
+* Document object
+* Parent object
+
+## Inline workers
+
+Not always, we can create a new script file for workers. With Blob(), we can create inline worker in the same script file
+
+```
+var blob = new Blob([
+    "onmessage = function(e) { postMessage('msg from worker'); }"]);
+
+// Obtain a blob URL reference to our worker 'file'.
+var blobURL = window.URL.createObjectURL(blob);
+
+var worker = new Worker(blobURL);
+worker.onmessage = function(e) {
+  // e.data == 'msg from worker'
+};
+worker.postMessage(); // Start the worker.
+```
+
 
 ## Author
 
